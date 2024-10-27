@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body>
+    <form id="u_form" action="">
+        <input id="u_input" placeholder="username" autocomplete="off" />
+    </form>
+    <ul id="messages"></ul>
+
+    <form id="form" action="">
+        <input id="input" placeholder="Text" autocomplete="off" /><button>Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+
+        var form = document.getElementById('form');
+        var usr = document.getElementById('u_input');
+        var input = document.getElementById('input');
+
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (input.value) {
+                socket.emit('chat message', input.value);
+                socket.emit('username', usr.value);
+                input.value = '';
+            }
+        });
+        socket.on('username', function (usr) {
+            var item = document.createElement('li');
+            item.textContent = usr;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+        socket.on('chat message', function (msg) {
+            var item = document.createElement('li');
+            item.textContent = msg;
+            messages.appendChild(item);
+            window.scrollTo(0, document.body.scrollHeight);
+        });
+
+
+
+    </script>
+</body>
+
+</html>
